@@ -1,0 +1,3 @@
+com\lidantao\controller\TestController.class
+com\lidantao\service\OpenFeignService\OpenFeignService.class
+com\lidantao\EurekaConsumerMain9001.class

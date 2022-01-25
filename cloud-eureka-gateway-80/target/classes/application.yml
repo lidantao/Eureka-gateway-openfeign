@@ -1,0 +1,40 @@
+server:
+  port: 80
+
+spring:
+  application:
+    name: gateway
+  cloud:
+    # springcloud 网关配置
+    gateway:
+      discovery:
+        # 表示启动动态路由（启动是为了实现多个provider注册到eureka，通过提供的服务名进行负载均衡访问）
+        locator:
+          enabled: true
+      routes:
+        # - 相当于 list 中的每个元素
+        - id: gateway
+          # uri 表示满足断言则跳到此地址，记住 lb 是表示采用负载均衡，一定要加，动态路由
+          uri: lb://provider
+          # 断言：匹配规则， - Path 表示一种匹配规则，按地址进行匹配
+          predicates:
+            - Path=/provider/**
+#            - Cookie
+        - id: consumer
+          uri: http://localhost:9001/consumer/openFeign/getTest
+          predicates:
+            - Path=/consumer/openFeign/getTest
+
+eureka:
+  client:
+    # true 表示向注册中心注册自己
+    register-with-eureka: true
+    # true 表示向 EurekaServer 拉取自己的注册信息
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:7001/eureka
+  instance:
+    # eureka 的主机名字
+    instance-id: gateway-80
+    # 悬浮显示 ip
+    prefer-ip-address: true
